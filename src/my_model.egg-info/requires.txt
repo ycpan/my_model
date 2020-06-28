@@ -1,0 +1,7 @@
+numpy
+
+[tf]
+tensorflow
+
+[tf-cpu]
+tensorflow-cpu

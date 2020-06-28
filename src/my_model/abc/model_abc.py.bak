@@ -1,0 +1,118 @@
+from abc import ABC, abstractmethod
+from argparse import ArgumentParser
+from my_model.layers.data_reader import DATA_READER
+from pathlib import Path
+import tensorflow as tf
+import functools
+import codecs
+import logging
+import sys
+import os
+class ABC_MODEL(DATA_READER):
+    def __init__(self,args):
+        self.indices = None
+        self.estimator = None
+        self.hook = True
+        self.args = args
+        Path(self.args.output).mkdir(exist_ok=True)
+        self.logging = logging.getLogger('tensorflow')
+        self._init_logging()
+        #self.logging.info('########3')
+        self.logging.info(self.args.output)
+        #tf.logging.set_verbosity(logging.INFO)
+        #logging.getLogger('tensorflow').handlers = handlers
+        #self.logging = self.init_logging(logging.getLogger('tensorflow'))
+
+        #handlers = [
+        #    #logging.FileHandler('results/main.log'),
+        #    logging.FileHandler('{}/main.log'.format(self.args.output)),
+        #    logging.StreamHandler(sys.stdout)
+        #]
+
+    #@abstractmethod
+    #def input_fn(self):
+    #    raise NotImplementedError()
+
+    #@staticmethod
+    @abstractmethod
+    def model_fn_builder(self,args):
+        raise NotImplementedError()
+
+        
+    def train(self):
+        model_fn = self.model_fn_builder(self.args)
+        train_inpf = functools.partial(self.input_fn, self.fwords(self.args.data_dir,'train'), self.ftags(self.args.data_dir,'train'),
+                                       self.args, shuffle_and_repeat=True)
+        eval_inpf = functools.partial(self.input_fn, self.fwords(self.args.data_dir,'testa'), self.ftags(self.args.data_dir,'testa'),
+                                       self.args, shuffle_and_repeat=False)
+    
+        cfg = tf.estimator.RunConfig(save_checkpoints_secs=120)
+        estimator = tf.estimator.Estimator(model_fn, '{}/model'.format(self.args.output), cfg, self.args)
+        Path(estimator.eval_dir()).mkdir(parents=True, exist_ok=True)
+        #hook = tf.contrib.estimator.stop_if_no_increase_hook(
+        #    estimator, 'f1', 500, min_steps=8000, run_every_secs=120)
+        #train_spec = tf.estimator.TrainSpec(input_fn=train_inpf, hooks=[hook])
+        train_spec = tf.estimator.TrainSpec(input_fn=train_inpf)
+        eval_spec = tf.estimator.EvalSpec(input_fn=eval_inpf, throttle_secs=120)
+        tf.estimator.train_and_evaluate(estimator, train_spec, eval_spec)
+
+    #@staticmethod
+    def compute_scores(self,output_predict_file,args):
+        from my_model.abc import conlleval
+        eval_result = conlleval.return_report(output_predict_file)
+        self.logging.info(''.join(eval_result))
+        # 写结果到文件中
+        with codecs.open(os.path.join(args.output, 'predict_score.txt'), 'w', encoding='utf-8') as fd:
+            fd.write(''.join(eval_result))
+
+    def predict(self):
+        # Path('results/score').mkdir(parents=True, exist_ok=True)
+        # with Path('results/score/{}.preds.txt'.format(name)).open('wb') as f:
+        session_config = tf.ConfigProto(allow_soft_placement = True,gpu_options=tf.GPUOptions(allow_growth = True))
+        cfg = tf.estimator.RunConfig(save_checkpoints_steps=120, save_summary_steps=1,log_step_count_steps=10,keep_checkpoint_max=20).replace(session_config=session_config)
+        model_fn = self.model_fn_builder(self.args)
+        self.estimator = tf.estimator.Estimator(model_fn, '{}/model'.format(self.args.output), cfg)
+        output_file = os.path.join(self.args.output,'preds_score.txt')
+        
+        with Path(output_file).open('wb') as f:
+            test_inpf = functools.partial(self.input_fn, self.fwords(self.args.data_dir,self.args.eval_file), self.ftags(self.args.data_dir,self.args.eval_file),self.args)
+            golds_gen = self.generator_fn(self.fwords(self.args.data_dir,self.args.eval_file), self.ftags(self.args.data_dir,self.args.eval_file))
+            preds_gen = self.estimator.predict(test_inpf)
+            for golds, preds in zip(golds_gen, preds_gen):
+                ((words, _), tags) = golds
+                # for word, tag, tag_pred in zip(words, tags, preds['tags']):
+                # self.logging.info(preds)
+
+                tags_tag = [tag for tag in preds['tags']]
+                for word, tag, tag_pred in zip(words, tags, tags_tag):
+                    f.write(b' '.join([word, tag, tag_pred]) + b'\n')
+                f.write(b'\n')
+            return  output_file 
+
+    def eval_score(self):
+    
+        output_file = self.predict()
+        self.compute_scores(output_file,self.args)
+    @staticmethod
+    @abstractmethod
+    def serving_input_receiver_fn():
+        """Serving input_fn that builds features from placeholders
+    
+        Returns
+        -------
+        tf.estimator.export.ServingInputReceiver
+        """
+        raise NotImplementedError()
+    def export(self):
+    
+        model_fn = self.model_fn_builder(self.args)
+    
+        estimator = tf.estimator.Estimator(model_fn,self.args.checkpoint_path)
+        estimator.export_saved_model(self.args.save_path, self.serving_input_receiver_fn)
+    #@abstractmethod
+    #def eval(self):
+        
+
+    #@abstractmethod
+    #def predict:
+

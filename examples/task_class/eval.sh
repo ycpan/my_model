@@ -1,0 +1,3 @@
+my_model-cli "eval"  --task "class" --model_name "base_class"   --data_dir /home/yongcanpan/MyModel/examples/task_class/data_dir  --output output_word2id --eval_file "/home/yongcanpan/MyModel/examples/task_class/data_dir/dev.txt" --batch_size 8  --buffer 15000 --dropout 0.5 --embedding 'word2id' --dim 300 --log_dir output_word2id --log_name 'eval' --vocab_words /home/anylangtech/.userdata/yongcanpan/MyModel/examples/task_class/data_dir/law_vocab_v1.txt --vocab_tags /home/yongcanpan/MyModel/examples/task_class/data_dir/law_tags.dic --max_seq_length 256 --use_lstm True
+#--output /home/anylangtech/.userdata/yongcanpan/gitdir/data_augumentation/dataset/large_corpra/output 
+

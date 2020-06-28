@@ -1,0 +1,40 @@
+#!/home/yongcanpan/anaconda3/envs/test_my_model/bin/python
+from argparse import ArgumentParser
+
+#from my_model.commands.convert import ConvertCommand
+#from my_model.commands.download import DownloadCommand
+#from my_model.commands.env import EnvironmentCommand
+#from my_model.commands.run import RunCommand
+#from my_model.commands.serving import ServeCommand
+from my_model.commands.train import TrainCommands
+from my_model.commands.eval import EvalCommands
+from my_model.commands.export import ExportCommands
+
+
+if __name__ == '__main__':
+    # 初始化一个参数，参数名称为：'my_model CLI tool'
+    parser = ArgumentParser('my_model CLI tool', usage='my_model-cli <command> [<args>]')
+    # 添加子命令
+    commands_parser = parser.add_subparsers(help='my_model-cli command helpers')
+
+    # Register commands
+    #ConvertCommand.register_subcommand(commands_parser)
+    #DownloadCommand.register_subcommand(commands_parser)
+    #EnvironmentCommand.register_subcommand(commands_parser)
+    #RunCommand.register_subcommand(commands_parser)
+    #ServeCommand.register_subcommand(commands_parser)
+    #UserCommands.register_subcommand(commands_parser)
+    TrainCommands.register_subcommand(commands_parser)
+    EvalCommands.register_subcommand(commands_parser)
+    ExportCommands.register_subcommand(commands_parser)
+
+    # Let's go
+    args = parser.parse_args()
+
+    if not hasattr(args, 'func'):
+        parser.print_help()
+        exit(1)
+
+    # Run
+    service = args.func(args)
+    service.run()

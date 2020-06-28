@@ -1,0 +1,4 @@
+#my_model-cli train --task ner --model_name bilstm_crf --data_dir /home/anylangtech/.userdata/yongcanpan/NER/sub_NER/3.dataset_task_class/data_dir --buffer 15000 --epochs 25 --batch_size 8 --dropout 0.5 --dim 300 --output output
+my_model-cli train --task class --model_name base_class --data_dir /home/yongcanpan/MyModel/examples/task_class/data_dir --buffer 15000 --epochs 25 --batch_size 8 --dropout 0.5 --dim 300 --output output_word2id --embedding 'word2id' --learning_rate 2e-5 --learning_rate_decay exp --learning_rate_peak 0.005 --decay_rate 0.96 --lstm_size 128 --num_oov_buckets 1 --decay_steps 100 --warmup_steps 1500 --vocab_words /home/anylangtech/.userdata/yongcanpan/MyModel/examples/task_class/data_dir/law_vocab_v1.txt  --vocab_tags /home/yongcanpan/MyModel/examples/task_class/data_dir/law_tags.dic --log_dir output_word2id  --max_seq_length 256 --device_map 1 --use_lstm True
+
+

@@ -1,0 +1,3 @@
+#python3 bert_base/train/bert_lstm_ner.py  
+#python3 run.py  -data_dir "/home/yongcanpan/event_extract/BERT-BiLSTM-CRF-NER/NERdata"  -vocab_file ./checkpoint/vocab.txt  -bert_config_file ./checkpoint/bert_config.json  -init_checkpoint ./checkpoint/bert_model.ckpt  -max_seq_length 128  -batch_size 32  -learning_rate 2e-5  -num_train_epochs 3.0  -output_dir ./output/result_dir/ -device_map "0" 
+python3 run.py  -data_dir "/home/yongcanpan/event_extract/BERT-BiLSTM-CRF-NER/NERdata"  -vocab_file ./checkpoint1/vocab.txt  -bert_config_file ./checkpoint1/bert_config.json  -init_checkpoint ./checkpoint1/bert_model.ckpt  -max_seq_length 128  -batch_size 32  -learning_rate 2e-5  -num_train_epochs 10.0  -output_dir ./output/result_dir/ -device_map "1" 
