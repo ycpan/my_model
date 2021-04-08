@@ -1,0 +1,33 @@
+INFO:tensorflow:global_step/sec: 1.52746
+INFO:tensorflow:examples/sec: 6.10985
+INFO:tensorflow:global_step/sec: 2.85631
+INFO:tensorflow:examples/sec: 11.4252
+INFO:tensorflow:global_step/sec: 2.73161
+INFO:tensorflow:examples/sec: 10.9264
+INFO:tensorflow:global_step/sec: 2.6825
+INFO:tensorflow:examples/sec: 10.73
+INFO:tensorflow:global_step/sec: 2.87415
+INFO:tensorflow:examples/sec: 11.4966
+INFO:tensorflow:global_step/sec: 2.89169
+INFO:tensorflow:examples/sec: 11.5667
+INFO:tensorflow:global_step/sec: 2.89905
+INFO:tensorflow:examples/sec: 11.5962
+INFO:tensorflow:global_step/sec: 2.91718
+INFO:tensorflow:examples/sec: 11.6687
+INFO:tensorflow:global_step/sec: 2.9198
+INFO:tensorflow:examples/sec: 11.6792
+INFO:tensorflow:Saving checkpoints for 1000 into student_dir/model.ckpt.
+INFO:tensorflow:global_step/sec: 2.04402
+INFO:tensorflow:examples/sec: 8.17608
+INFO:tensorflow:global_step/sec: 2.87517
+INFO:tensorflow:examples/sec: 11.5007
+INFO:tensorflow:global_step/sec: 2.87922
+INFO:tensorflow:examples/sec: 11.5169
+INFO:tensorflow:global_step/sec: 2.83574
+INFO:tensorflow:examples/sec: 11.343
+INFO:tensorflow:global_step/sec: 2.83721
+INFO:tensorflow:examples/sec: 11.3488
+INFO:tensorflow:global_step/sec: 2.59576
+INFO:tensorflow:examples/sec: 10.383
+^C^C
+

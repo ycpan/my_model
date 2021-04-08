@@ -1,0 +1,4 @@
+[submodule "HbaseOperation"]
+	path = HbaseOperation
+	url = git@github.com:ycpan/HbaseOperation.git
+	branch = dev

@@ -1,0 +1,1 @@
+my_model-cli export --task ner --model_name bilstm_crf --checkpoint_path results/model/ --save_path saved_model --dropout 0.5 --vocab_words /home/yongcanpan/NER/sub_NER/3.dataset_conll2003/vocab.words.txt --glove /home/yongcanpan/NER/sub_NER/3.dataset_conll2003/glove.npz  --vocab_tags /home/yongcanpan/NER/sub_NER/3.dataset_conll2003/vocab.tags.txt --dim 300

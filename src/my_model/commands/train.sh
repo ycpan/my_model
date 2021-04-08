@@ -1,0 +1,2 @@
+#my_model-cli train --task ner --model_name bilstm_crf --train_data /home/anylangtech/.userdata/yongcanpan/NER/sub_NER/3.dataset_conll2003 --buffer 15000 --epochs 25 --batch_size 8 --dropout 0.5 --dim 300 --output output
+my_model-cli train --task ner --model_name bilstm_crf --train_data /home/anylangtech/.userdata/yongcanpan/NER/sub_NER/3.dataset_conll2003 --buffer 15000 --epochs 25 --batch_size 8 --dropout 0.5 --dim 300 --output output --embedding 'glove'

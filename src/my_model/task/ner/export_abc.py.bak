@@ -1,0 +1,67 @@
+"""Export model as a saved_model"""
+
+__author__ = "Guillaume Genthial"
+
+from pathlib import Path
+import json
+
+from argparse import ArgumentParser
+import tensorflow as tf
+
+from my_model.commands.train import TrainCommands
+from my_model.task.ner.bilstm_crf_ner_model import BILSTM_CRF_NER_MODEL
+
+DATADIR = '../../data/example'
+PARAMS = './results/params.json'
+MODELDIR = './results/model'
+
+
+def serving_input_receiver_fn():
+    """Serving input_fn that builds features from placeholders
+
+    Returns
+    -------
+    tf.estimator.export.ServingInputReceiver
+    """
+    words = tf.placeholder(dtype=tf.string, shape=[None, None], name='words')
+    nwords = tf.placeholder(dtype=tf.int32, shape=[None], name='nwords')
+    receiver_tensors = {'words': words, 'nwords': nwords}
+    features = {'words': words, 'nwords': nwords}
+    return tf.estimator.export.ServingInputReceiver(features, receiver_tensors)
+
+
+if __name__ == '__main__':
+
+    # 初始化一个参数，参数名称为：'my_model CLI tool'
+    #parser = ArgumentParser('my_model export ', usage='my_model_export <command> [<args>]')
+    parser = ArgumentParser('my_model_export ', usage='my_model_export <command> [<args>]')
+    # 添加子命令
+    #commands_parser = parser.add_subparsers(help='my_model_export command helpers')
+
+    ## Register commands
+    #TrainCommands.register_subcommand(commands_parser)
+    parser.add_argument('--vocab_words',default="/home/anylangtech/.userdata/yongcanpan/NER/sub_NER/3.dataset_conll2003/vocab.words.txt")
+    parser.add_argument('--vocab_chars',default="/home/anylangtech/.userdata/yongcanpan/NER/sub_NER/3.dataset_conll2003/vocab.chars.txt")
+    parser.add_argument('--vocab_tags',default="/home/anylangtech/.userdata/yongcanpan/NER/sub_NER/3.dataset_conll2003/vocab.tags.txt")
+    parser.add_argument('--glove',default="/home/anylangtech/.userdata/yongcanpan/NER/sub_NER/3.dataset_conll2003/glove.npz")
+    parser.add_argument('--dropout',type=float,default=0.5)
+    parser.add_argument("--num_oov_buckets", type=int, default=1, help="num_oov_bucket.")
+    parser.add_argument("--learning_rate_decay", type=str, default='exp', help="decay method:exp or sqrt")
+    parser.add_argument("--learning_rate_peak", type=float, default=0.01, help="初始化学习率 ")
+    parser.add_argument("--decay_steps", type=int, default=100, help="每多少步衰减")
+    parser.add_argument("--lstm_size", type=int, default=128, help="lstm cell size")
+    parser.add_argument("--decay_rate", type=float, default=0.95, help="每次衰减称的系数")
+    parser.add_argument("--warmup_steps", type=int, default=500, help="warrm up")
+    parser.add_argument("--dim", type=int, default=128, help="embedding size")
+    args = parser.parse_args()
+    #with Path(PARAMS).open() as f:
+    #    params = json.load(f)
+
+    #params['words'] = str(Path(DATADIR, 'vocab.words.txt'))
+    #params['chars'] = str(Path(DATADIR, 'vocab.chars.txt'))
+    #params['tags'] = str(Path(DATADIR, 'vocab.tags.txt'))
+    #params['glove'] = str(Path(DATADIR, 'glove.npz'))
+    model_fn = BILSTM_CRF_NER_MODEL.model_fn_builder(args)
+
+    estimator = tf.estimator.Estimator(model_fn, './results/model')
+    estimator.export_saved_model('saved_model', serving_input_receiver_fn)

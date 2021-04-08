@@ -1,0 +1,3 @@
+Saving dict for global step 43879: acc = 0.9870477, f1 = 0.9502611, global_step = 43879, loss = 0.4504829, precision = 0.9526171, recall = 0.9479167
+Saving 'checkpoint_path' summary for global step 43879: results/model/model.ckpt-43879
+

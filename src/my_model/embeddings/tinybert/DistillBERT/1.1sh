@@ -1,0 +1,1 @@
+python extract_wikipedia_for_bert/wikiextractor/WikiExtractor.py /home/yongcanpan/dataset/english_wikidata/enwiki-latest-pages-articles.xml.bz2 --output /home/yongcanpan/dataset/english_wikidata/outputdir/ --json
